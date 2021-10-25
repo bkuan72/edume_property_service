@@ -1,2 +1,2 @@
-# edume_entity
-Template microservice entity
+# edume_property_service
+property microservice
