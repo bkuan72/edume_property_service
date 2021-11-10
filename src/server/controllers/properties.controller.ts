@@ -1,12 +1,12 @@
-import { EntityDTO, UpdEntityDTO } from './../../dtos/entities.DTO';
+import { PropertyDTO, UpdPropertyDTO } from './../../dtos/properties.DTO';
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
-import {EntityModel} from "../models/entity.model";
+import {PropertyModel} from "../models/property.model";
 import * as express from 'express';
 import Controller from "../../interfaces/controller.interface";
 import DataNotFoundException from "../../exceptions/DataNotFoundException";
 import NoDataException from "../../exceptions/NoDataExceptions";
-import { entities_schema } from "../../schemas/entities.schema";
+import { properties_schema } from "../../schemas/properties.schema";
 import validationUpdateMiddleware from "../../middleware/validate.update.dto.middleware";
 import validationMiddleware from "../../middleware/validation.middleware";
 
@@ -16,10 +16,10 @@ import { RouteAuthEnum, RouteOtherAuthEnum, RouterService } from '../../services
 
 
 
-export class EntitiesController implements Controller{
-  public path='/entities';
+export class PropertiesController implements Controller{
+  public path='/properties';
   public router= express.Router();
-  private entities = new EntityModel();
+  private properties = new PropertyModel();
   private routerService = new RouterService();
   siteCode = SysEnv.SITE_CODE;
 
@@ -31,13 +31,13 @@ export class EntitiesController implements Controller{
 
   public initializeRoutes() {
     this.routerService.putRoute('/api'+this.path+'/post', RouteAuthEnum.NORMAL, RouteOtherAuthEnum.NONE).finally(() => {
-      this.router.post(this.path+'/post', validationMiddleware(entities_schema), this.newEntity);
+      this.router.post(this.path+'/post', validationMiddleware(properties_schema), this.newProperty);
         this.routerService.putRoute('/api'+this.path+'/all', RouteAuthEnum.NORMAL, RouteOtherAuthEnum.NONE).finally(() => {
           this.router.get(this.path+'/all', this.getAll);
-          this.routerService.putRoute('/api'+this.path+'/byId', RouteAuthEnum.NORMAL, RouteOtherAuthEnum.NONE).finally(() => {
+          this.routerService.putRoute('/api'+this.path+'/byId/:id', RouteAuthEnum.NORMAL, RouteOtherAuthEnum.NONE).finally(() => {
             this.router.get(this.path+'/byId/:id', this.findById);
-            this.routerService.putRoute('/api'+this.path+'/patch', RouteAuthEnum.NORMAL, RouteOtherAuthEnum.NONE).finally(() => {
-              this.router.patch(this.path+'/patch/:id',  validationUpdateMiddleware(entities_schema), this.update);
+            this.routerService.putRoute('/api'+this.path+'/patch/:id', RouteAuthEnum.NORMAL, RouteOtherAuthEnum.NONE).finally(() => {
+              this.router.patch(this.path+'/patch/:id',  validationUpdateMiddleware(properties_schema), this.update);
               this.routerService.putRoute('/api'+this.path+'/DTO', RouteAuthEnum.DEV, RouteOtherAuthEnum.NONE).finally(() => {
                 this.router.get(this.path+'/DTO', this.apiDTO);
                 this.routerService.putRoute('/api'+this.path+'/updDTO', RouteAuthEnum.NORMAL, RouteOtherAuthEnum.NONE).finally(() => {
@@ -55,21 +55,21 @@ export class EntitiesController implements Controller{
   }
 
   apiDTO  = (request: express.Request, response: express.Response) => {
-    const dto = new EntityDTO();
+    const dto = new PropertyDTO();
     response.send(dto);
   }
   apiUpdDTO  = (request: express.Request, response: express.Response) => {
-    const dto = new UpdEntityDTO();
+    const dto = new UpdPropertyDTO();
     response.send(dto);
   }
   apiSchema  = (request: express.Request, response: express.Response) => {
-    response.send(entities_schema);
+    response.send(properties_schema);
   }
 
-  newEntity  = (request: express.Request, response: express.Response, next: express.NextFunction) => {
-      this.entities.create(request.body).then((respEntityDTO) => {
-        if (respEntityDTO) {
-            response.send(respEntityDTO);
+  newProperty  = (request: express.Request, response: express.Response, next: express.NextFunction) => {
+      this.properties.create(request.body).then((respPropertyDTO) => {
+        if (respPropertyDTO) {
+            response.send(respPropertyDTO);
           } else {
             next(new PostDataFailedException())
           }
@@ -77,9 +77,9 @@ export class EntitiesController implements Controller{
   };
 
   findById  = (request: express.Request, response: express.Response, next: express.NextFunction) => {
-    this.entities.findById(request.params.id).then((respEntityDTO) => {
-      if (respEntityDTO) {
-        response.send(respEntityDTO);
+    this.properties.findById(request.params.id).then((respPropertyDTO) => {
+      if (respPropertyDTO) {
+        response.send(respPropertyDTO);
       } else {
         next(new DataNotFoundException(request.params.id))
       }
@@ -87,9 +87,9 @@ export class EntitiesController implements Controller{
   }
 
   getAll  = (request: express.Request, response: express.Response, next: express.NextFunction) => {
-    this.entities.getAll().then((respEntityDTOArray) => {
-      if (respEntityDTOArray) {
-        response.send(respEntityDTOArray);
+    this.properties.getAll().then((respPropertyDTOArray) => {
+      if (respPropertyDTOArray) {
+        response.send(respPropertyDTOArray);
       } else {
         next(new NoDataException())
       }
@@ -97,9 +97,9 @@ export class EntitiesController implements Controller{
   }
 
   update  = (request: express.Request, response: express.Response, next: express.NextFunction) => {
-    this.entities.updateById(request.params.id, request.body).then((respEntityDTO) => {
-      if (respEntityDTO) {
-        response.send(respEntityDTO);
+    this.properties.updateById(request.params.id, request.body).then((respPropertyDTO) => {
+      if (respPropertyDTO) {
+        response.send(respPropertyDTO);
       } else {
         next(new DataNotFoundException(request.params.id))
       }

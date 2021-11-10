@@ -1,9 +1,9 @@
-import { entities_schema_table, entities_schema } from './entities.schema';
 import { tableIfc } from '../modules/DbModule';
+import { properties_schema_table, properties_schema } from './properties.schema';
 
 export const sysTables: tableIfc[] = [
   {
-    name: entities_schema_table,
-    schema: entities_schema
+    name: properties_schema_table,
+    schema: properties_schema
   }
 ];

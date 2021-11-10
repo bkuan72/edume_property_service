@@ -1,4 +1,3 @@
-import { EntitiesController } from './server/controllers/entities.controller';
 import SysLog from './modules/SysLog';
 import toobusy_js from 'toobusy-js';
 import SysEnv from './modules/SysEnv';
@@ -6,6 +5,7 @@ import SysEnv from './modules/SysEnv';
 import 'dotenv/config'; // loads the .env environment
 import validateEnv from './utils/validateEnv';
 import App from './app';
+import { PropertiesController } from './server/controllers/properties.controller';
 
 // validate that all required environment variable is present
 SysEnv.init();
@@ -19,7 +19,7 @@ const port = SysEnv.PORT;
 
 const app = new App (
   [
-    new EntitiesController(),
+    new PropertiesController(),
 
   ],
   port
