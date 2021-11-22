@@ -18,4 +18,4 @@ COPY package*.json /app/edume_property
 RUN npm install && npm i -g nodemon
 
 CMD [ "npm", "run", "run-build" ]
-EXPOSE 3304
+EXPOSE 33003

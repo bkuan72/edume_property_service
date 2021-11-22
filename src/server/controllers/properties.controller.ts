@@ -13,6 +13,7 @@ import validationMiddleware from "../../middleware/validation.middleware";
 import PostDataFailedException from "../../exceptions/PostDataFailedException";
 import SysEnv from "../../modules/SysEnv";
 import { RouteAuthEnum, RouteOtherAuthEnum, RouterService } from '../../services/router.service';
+import SysLog from '../../modules/SysLog';
 
 
 
@@ -44,6 +45,8 @@ export class PropertiesController implements Controller{
                   this.router.get(this.path+'/updDTO', this.apiUpdDTO);
                   this.routerService.putRoute('/api'+this.path+'/schema', RouteAuthEnum.DEV, RouteOtherAuthEnum.NONE).finally(() => {
                     this.router.get(this.path+'/schema', this.apiSchema);
+                    //  no external route required
+                    this.router.put(this.path+'/getter', this.getter);
                   })
                 })
               })
@@ -51,7 +54,6 @@ export class PropertiesController implements Controller{
           })
         })
     })
-    return;
   }
 
   apiDTO  = (request: express.Request, response: express.Response) => {
@@ -102,6 +104,25 @@ export class PropertiesController implements Controller{
         response.send(respPropertyDTO);
       } else {
         next(new DataNotFoundException(request.params.id))
+      }
+    })
+  }
+
+  /**
+   * Tries to get property value, if none found then create new property
+   * @param request request
+   * @param response response
+   * @param next next action
+   */
+  getter  = (request: express.Request, response: express.Response, next: express.NextFunction) => {
+    SysLog.info(request.body);
+    this.properties.find({name : request.body.name}).then((respPropertyDTOArray) => {
+      SysLog.info(respPropertyDTOArray.toString());
+      if (respPropertyDTOArray && respPropertyDTOArray.length > 0) {
+        response.send(respPropertyDTOArray);
+      } else {
+        SysLog.info("Property Created: " + request.body.name);
+        this.newProperty(request, response, next);
       }
     })
   }

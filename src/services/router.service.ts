@@ -84,7 +84,9 @@ export class RouterService {
                     const data = Buffer.concat(body).toString();
                     routes = JSON.parse(data);
                     console.info(data);
-                    resolve(routes);
+                });
+                res.on('end', ()=>{
+                resolve(routes);
                 });
             });
             req.on('error', error => {

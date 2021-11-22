@@ -34,7 +34,7 @@ export class SystemEnvironment {
         this.DB_USER = 'webservice';            // database user id
         this.DB_PASSWORD = ''                   // database password
         this.DB_NAME = 'testdb';                // database name
-        this.DB_PORT = '33000';                    // database port
+        this.DB_PORT = '3306';                    // database port
         this.PORT = 3000;                       // this server port
         this.JWT_SECRET = '';                   // JWT secret key
         this.DB_BCRYPT_SALT = 10;               // Bcrypt salt number
@@ -54,7 +54,7 @@ export class SystemEnvironment {
         this.TOOBUSY_CHECK_INTERVAL = 500;      // check interval in ms
 
         this.ROUTER_SERVICE = 'localhost';
-        this.ROUTER_SERVICE_PORT = '3032';
+        this.ROUTER_SERVICE_PORT = '33002';
         this.PROXY_TARGET = 'edume_entity'
     }
     init(): void {

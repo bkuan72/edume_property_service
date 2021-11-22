@@ -1,4 +1,3 @@
-import SysLog from './modules/SysLog';
 import toobusy_js from 'toobusy-js';
 import SysEnv from './modules/SysEnv';
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -20,7 +19,6 @@ const port = SysEnv.PORT;
 const app = new App (
   [
     new PropertiesController(),
-
   ],
   port
 );
